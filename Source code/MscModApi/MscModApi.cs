@@ -29,7 +29,6 @@ namespace MscModApi
 		public override string Description =>
 			"A general modding 'help' featuring things like installable/boltable parts, shop, part boxing, utility tools & more.";
 		
-		public override bool UseAssetsFolder => true;
 		private static SettingsCheckBox showBoltSizeSetting;
 
 		private static SettingsCheckBox enableInstantInstall;
@@ -56,8 +55,9 @@ namespace MscModApi
 
 		public override void ModSetup()
 		{
+			SetupFunction(Setup.ModSettings, ModSettings);
+
 			SetupFunction(Setup.OnGUI, OnGui);
-			SetupFunction(Setup.PreLoad, PreLoad);
 			SetupFunction(Setup.OnLoad, Load);
 			SetupFunction(Setup.PostLoad, PostLoad);
 
@@ -66,7 +66,7 @@ namespace MscModApi
 			SetupFunction(Setup.Update, Update);
 		}
 
-		public override void ModSettings()
+		public void ModSettings()
 		{
 			showBoltSizeSetting = Settings.AddCheckBox(this, "showBoltSizeSetting", "Show screw size", false);
 			disableLoadingMovementLock = Settings.AddCheckBox(
@@ -136,7 +136,7 @@ namespace MscModApi
 
 			foreach (var modParts in modsParts)
 			{
-				var mod = ModLoader.GetMod(modParts.Key);
+				var mod = Helper.GetMod(modParts.Key);
 
 				if (!modSaveFileMapping.TryGetValue(mod.ID, out var saveFileName))
 				{
