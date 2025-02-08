@@ -58,6 +58,7 @@ namespace MscModApi
 			SetupFunction(Setup.ModSettings, ModSettings);
 
 			SetupFunction(Setup.OnGUI, OnGui);
+			SetupFunction(Setup.PreLoad, PreLoad);
 			SetupFunction(Setup.OnLoad, Load);
 			SetupFunction(Setup.PostLoad, PostLoad);
 
@@ -112,19 +113,23 @@ namespace MscModApi
 			ConsoleCommand.Add(new ScrewPlacementModCommand(this, modsParts));
 		}
 
-		private void Load()
+		private void PreLoad()
 		{
-			
-			updateLocked = false;
-			tool = new Tool();
 			PaintingSystem.PaintingSystem.Init();
 			Shop.Init();
 			
 			mscModApiGameObject = new GameObject(ID);
 			replacedGamePartsDelayedInitializer = mscModApiGameObject.AddComponent<ReplacedGamePartsDelayedInitializer>();
 		}
-		
-		private new void PostLoad()
+
+		private void Load()
+		{
+			updateLocked = false;
+			tool = new Tool();
+		}
+
+
+		private void PostLoad()
 		{
 			replacedGamePartsDelayedInitializer.InitOnceByUpdateFrame();
 		}
@@ -174,7 +179,7 @@ namespace MscModApi
 			ReplacedGameParts.Save();
 		}
         
-		private new void Update()
+		private void Update()
 		{
 			if (updateLocked)
 			{
